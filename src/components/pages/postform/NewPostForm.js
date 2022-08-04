@@ -1,13 +1,13 @@
 import { useState } from "react";
-import {Link} from "react-router-dom";
 import './new.css'
 
 const initialState = {
   title: "",
   image: "",
   notes: "",
-  description: "",
+  content: "",
   rating: "",
+  author: ""
 };
 
 function NewPostForm({ onAddPost }) {
@@ -22,7 +22,7 @@ function NewPostForm({ onAddPost }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("/spices", {
+    fetch("https://blog-sitapp.herokuapp.com/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,6 +47,8 @@ function NewPostForm({ onAddPost }) {
           value={formData.title}
           onChange={handleChange}
         />
+
+
         <label htmlFor="image">Image URL: </label>
         <input
           type="text"
@@ -54,17 +56,17 @@ function NewPostForm({ onAddPost }) {
           value={formData.image}
           onChange={handleChange}
         />
-        <label htmlFor="notes">Tasting Notes: </label>
+        {/* <label htmlFor="notes">Tasting Notes: </label>
         <input
           type="text"
           id="notes"
           value={formData.notes}
           onChange={handleChange}
-        />
+        /> */}
         <label htmlFor="description">Description: </label>
         <textarea
           id="description"
-          value={formData.description}
+          value={formData.content}
           onChange={handleChange}
         />
         <label htmlFor="rating">Rating: </label>
@@ -76,7 +78,6 @@ function NewPostForm({ onAddPost }) {
           onChange={handleChange}
         />
         <button type="submit">Submit</button>
-        <Link className="link"  to="/write">Write</Link>
       </form>
     </div>
   );

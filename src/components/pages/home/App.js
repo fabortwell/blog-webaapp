@@ -1,14 +1,34 @@
 import { useState, useEffect } from "react";
+import { Switch, Route } from "react-router-dom";
 // import Header from "./Header";
 import NewPostForm from "../postform/NewPostForm";
 import PostItem from "../post/PostItem";
-
+import Appbar from "../appbar/Appbar"
+import Login from "../login/Login"
+import SignUp from "../register/SignUp"
+// import Settings from "../settings/Settings"
+// import Sidebar from "../sidebar/Sidebar"
+import Hero from "../hero/Hero"
+import SearchBar from "../search/SearchBar"
+import HomePage from "../homepage/HomePage"
 
 function App() {
   const [posts, setPosts] = useState([]);
 
+   const [user, setUser] = useState(null);
+
   useEffect(() => {
-    fetch("http://127.0.0.1:3000/spices")
+    // auto-login
+    fetch("http://localhost:3000/me").then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user));
+      }
+    });
+  }, []);
+
+
+  useEffect(() => {
+    fetch("https://blog-sitapp.herokuapp.com/posts")
       .then((r) => r.json())
       .then(setPosts);
   }, []);
@@ -33,22 +53,41 @@ function App() {
 
   return (
     <>
-      {/* <Header PostCount={posts.length} /> */}
+
+
+<Appbar user={user} setUser={setUser} />
+<Hero />
+<SearchBar />
+<NewPostForm />
+{/* <PostItem /> */}
       <main>
-        <NewPostForm onAddPost={handleAddPost} />
-        <section className="spice-list">
-          {posts.map((post) => (
-            <PostItem
-              key={post.id}
-              post={post}
-              onUpdatePost={handleUpdatePost}
-              onDeletePost={handleDeletePost}
-            />
-          ))}
-        </section>
+        {user ? (
+          <Switch>
+            <Route path="/">
+              <HomePage user={user}/>
+            </Route>
+          </Switch>
+        ) : (
+          <Switch>
+            <Route path="/register">
+              <SignUp setUser={setUser} />
+            </Route>
+            <Route path="/login">
+              <Login setUser={setUser} />
+            </Route>
+            <Route path="/">
+            </Route>
+          </Switch>
+        )}
       </main>
     </>
+
+
+
+  
+   
   );
 }
 
 export default App;
+

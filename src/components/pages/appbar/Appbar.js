@@ -2,8 +2,14 @@ import {Link} from "react-router-dom";
 import "./appbar.css"
 
 
-export default function Appbar() {
-  const user = true;
+function Appbar ({ user, setUser }) {
+  function handleLogoutClick() {
+    fetch("/logout", { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        setUser(null);
+      }
+    });
+  }
   return (
     <div className="top">
     <div className="topLeft">
@@ -26,6 +32,16 @@ export default function Appbar() {
          <Link className="link" to="/write">WRITE</Link>
          </li>
          <li className="topListItem">
+         <div>
+        {user ? (
+          <button onClick={handleLogoutClick}>Logout</button>
+        ) : (
+          <>
+            <Link to="/signup">LOGIN</Link>
+            <Link to="/login">REGISTER</Link>
+          </>
+        )}
+      </div>
          <Link className="link" to="/login">LOGIN</Link>
          </li>
 
@@ -61,3 +77,39 @@ export default function Appbar() {
     </div>
   );
 }
+export default Appbar
+// import React from "react";
+// import { Link } from "react-router-dom";
+
+// function NavBar({ user, setUser }) {
+//   function handleLogoutClick() {
+//     fetch("/logout", { method: "DELETE" }).then((r) => {
+//       if (r.ok) {
+//         setUser(null);
+//       }
+//     });
+//   }
+
+//   return (
+//     <>
+//     <header>
+//       <div>
+//         <Link to="/">Home</Link>
+//       </div>
+//       <div>
+//         {user ? (
+//           <button onClick={handleLogoutClick}>Logout</button>
+//         ) : (
+//           <>
+//             <Link to="/signup">Signup</Link>
+//             <Link to="/login">Login</Link>
+//           </>
+//         )}
+//       </div>
+//     </header>
+   
+//     </>
+//   );
+// }
+
+// export default NavBar;
